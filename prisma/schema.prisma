@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type Balance {
+  friend String @db.ObjectId
+  due    Int    @default(0)
+}
+
+model User {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  email       String    @unique
+  password    String
+  groups      String[]  @default([]) // refers to the groups user is in
+  settlements Balance[] // refers to the amount user owes or is owed along with the person in reference
+}
+
+model Group {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  members         String[]  @db.ObjectId // refers to users in that group
+  groupSettlement Balance[]
+  expenses        String[]  @db.ObjectId // refers to expenses in that group
+}
+
+model Expense {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  amount      Int
+  paidBy      String    @db.ObjectId // refers to the user who paid this
+  participant Balance[] //refers to the participants of that expense
+  tag         String?
+  timestamp   DateTime  @default(now())
+}
+
+model Settlement {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  amount    Int
+  payer     String   @db.ObjectId
+  receiver  String   @db.ObjectId
+  timestamp DateTime @default(now())
+}
