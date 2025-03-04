@@ -1,36 +1,66 @@
 "use client"
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
-import { useRouter } from 'next/navigation'
-import { useRef } from "react"
-// import { z } from 'zod';
-// import MessagePopup from './MessagePopup';
-// const signinSchema = z.object({
-//     email: z.string().email(),
-//     password: z.string().min(8, "Password must be atleast 8 charcters").max(20, "Password must be atmost 20 charcters")
-// })
+import { useRef, useState } from "react";
+
+import MessagePopup from './MessagePopup';
+
+import { z } from 'zod';
+const signinSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(8, "Password must be atleast 8 charcters").max(20, "Password must be atmost 20 characters")
+})
+
 function SigninCard() {
     const router = useRouter();
 
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
+    const [errorState, setErrorState] = useState<string>("");
+    const isErrorRef = useRef<boolean>(true);
 
 
-    // async function sendSigninReq() {
-    //     const userData = {
-    //         email: emailRef.current?.value,
+    function errorMaker(errorMessage: string) {
+        console.log("errorMaker called with " + errorMessage);
+        isErrorRef.current = true;
+        setErrorState(errorMessage);
+    }
 
-    //         password: passwordRef.current?.value,
-    //     }
-    //     try {
-    //         const parsedData = signinSchema.parse(userData);
+    function successMaker(message: string) {
+        isErrorRef.current = false;
+        setErrorState(message);
+    }
 
+    async function sendSigninReq() {
+        const userData = {
+            email: emailRef.current?.value,
 
-    //     } catch (e) {
+            password: passwordRef.current?.value,
+        }
+        try {
+            const parsedData = signinSchema.parse(userData);
+            const res = await signIn('credentials', {
+                email: parsedData.email,
+                password: parsedData.password,
+                redirect: false,
+            });
+            console.log(res);
 
+        } catch (e) {
+            //catching zod errors
+            if (e instanceof z.ZodError) {
+                const error = e.flatten().fieldErrors;
+                if (error.email) {
+                    errorMaker(error.email[0]);
+                }
+                else if (error.password) {
+                    errorMaker(error.password[0])
+                }
 
-
-    //     }
-    // }
+            }
+        }
+    }
     return (
         <div className=" flex flex-col justify-center gap-8  p-4 bg-white border-lightBlue border rounded-2xl shadow-2xl h-[50%] w-[80%] max-w-100">
 
@@ -38,10 +68,13 @@ function SigninCard() {
                 <input ref={emailRef} placeholder="E-mail" className="my-2 w-full p-2 border rounded-md  border-gray-400"></input>
                 <input type="password" ref={passwordRef} placeholder="Password" className="my-2 w-full p-2 border rounded-md border-gray-400"></input>
             </div>
+
             <div className="flex flex-col items-end justify-center">
-                <button onClick={() => console.log('signin clicked')} className="border hover:bg-lightBlue border-gray-400 rounded-md p-2  w-full text-ourPurple">Signup</button>
+                <button onClick={() => sendSigninReq()} className="border hover:bg-lightBlue border-gray-400 rounded-md p-2  w-full text-ourPurple">Signin</button>
                 <button onClick={() => { router.push('/signup') }} className=" hover:text-ourPurple text-md ">Register</button>
             </div>
+
+            {errorState && <MessagePopup message={errorState} errorSetter={setErrorState} isError={isErrorRef.current} />}
         </div>
     )
 }
@@ -56,9 +89,7 @@ export default function Signin() {
             <div className="flex-grow flex justify-center items-center">
                 <SigninCard />
             </div>
-            <div>
 
-            </div>
         </div>
     )
 }

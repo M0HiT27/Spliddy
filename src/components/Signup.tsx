@@ -16,11 +16,14 @@ function SignupCard() {
     const nameRef = useRef<HTMLInputElement>(null);
     const [errorState, setErrorState] = useState<string>("");
     const isErrorRef = useRef<boolean>(true);
+
+
     function errorMaker(errorMessage: string) {
         console.log("errorMaker called with " + errorMessage);
         isErrorRef.current = true;
         setErrorState(errorMessage);
     }
+
     function successMaker(message: string) {
         isErrorRef.current = false;
         setErrorState(message);
