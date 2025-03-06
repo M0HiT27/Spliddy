@@ -8,7 +8,7 @@ export default async function Dashboard() {
         return (
             <div className='h-lvh w-screen'>
 
-                <header className='fixed top bg-lightBlue w-screen h-[8lvh] shadow p-2 px-6 flex justify-between items-center'>
+                <header className='fixed top-0 bg-lightBlue w-screen h-[8lvh] shadow p-2 px-6 flex justify-between items-center'>
                     <h1 className='text-3xl text-ourPurple'>Spliddy</h1>
                     <div className='flex gap-8 '>
                         <LogoutButton />

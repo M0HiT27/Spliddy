@@ -34,7 +34,7 @@ export function LogoutButton() {
 export function SigninButton() {
     const router = useRouter();
     return (
-        <button onClick={() => router.push('/signin')} className="hover:cursor-pointer hover:scale-[1.2] text-lg bg-lightBlue text-ourPurple">
+        <button onClick={() => router.push('/signin')} className="hover:cursor-pointer hover:scale-[1.2]  text-lg bg-lightBlue text-ourPurple">
             Login
         </button>
     )

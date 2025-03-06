@@ -14,7 +14,7 @@
 /coverage
 /src/app/clientcheck
 /src/app/check
-
+/src/app/framer
 # next.js
 /.next/
 /out/

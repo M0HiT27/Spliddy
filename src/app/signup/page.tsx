@@ -11,7 +11,7 @@ export default async function SignupPage() {
     if (session) redirect("/dashboard");
     return (
         <div className="flex">
-            <header className='fixed top  w-screen h-[8lvh]  p-2 px-6 flex justify-end items-center'>
+            <header className='fixed top-0  w-screen h-[8lvh]  p-2 px-6 flex justify-end items-center'>
                 <div className='flex gap-8 '>
                     <HomeButton />
                 </div>
