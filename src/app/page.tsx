@@ -11,8 +11,8 @@ export default async function Home() {
   const session = await getServerSession();
   if (session) redirect("/dashboard");
   return (
-    <div className='h-screen w-screen'>
-      <header className='fixed top bg-lightBlue w-screen h-[8%] shadow p-2 px-6 flex justify-between items-center'>
+    <div className='h-lvh w-screen'>
+      <header className='fixed top bg-lightBlue w-screen h-[8lvh] shadow p-2 px-6 flex justify-between items-center'>
         <h1 className='text-3xl text-ourPurple'>Spliddy</h1>
         <div className='flex gap-8 '>
           <SigninButton />
@@ -21,7 +21,7 @@ export default async function Home() {
       </header>
 
 
-      <footer className='fixed flex justify-end gap-6 p-2   bottom-0 h-[8%] w-screen'>
+      <footer className='fixed flex justify-end gap-6 p-2   bottom-0 h-[8lvh] w-screen'>
         <Link href='https://github.com/M0HiT27' target="_blank" className='hover:bg-gray-300 rounded-xs  p-1 '>
           <GithubIcon />
         </Link>

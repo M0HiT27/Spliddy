@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning className="bg-wave w-screen h-screen">
+      <body suppressHydrationWarning className="bg-wave w-screen ">
 
         {children}
 
