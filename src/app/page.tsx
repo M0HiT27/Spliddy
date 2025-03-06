@@ -1,4 +1,4 @@
-import { FilledLinkedInIcon, GithubIcon, LinkedinIcon } from '@/components/Icons';
+import { FilledLinkedInIcon, GithubIcon, /*LinkedinIcon*/ } from '@/components/Icons';
 import { SigninButton, SignupButton } from '@/components/Buttons';
 import { getServerSession } from 'next-auth'
 import Link from 'next/link';
