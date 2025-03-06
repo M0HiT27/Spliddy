@@ -1,7 +1,22 @@
 @import "tailwindcss";
 
+.bg-wave {
+    background-image: url('/wave3.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    aspect-ration : 960/300;
+    width : 100%;
+  }
+
 @theme {
+  
+  
   --color-ourPurple: #5046e4;
   --color-lightBlue : #dfe7ff;
  --color-errorColor : #ca2a30;
 }
+/*
+#8882ee
+
+*/

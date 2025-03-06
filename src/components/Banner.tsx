@@ -1,9 +1,9 @@
 
 export default function Banner() {
     return (
-        <div className="md:flex flex-col hidden h-screen w-[60%] bg-ourPurple">
-            <div className="h-[90%] flex flex-col justify-center items-center gap-2">
-                <div className=" p-2 text-4xl  text-white">
+        <div className="md:flex flex-col hidden h-screen w-[50%]">
+            <div className="-m-15 h-screen flex flex-col justify-center items-center gap-8">
+                <div className="text-6xl  text-white">
                     Spliddy
                 </div>
                 <div className=" text-center text-lg text-white font-light">
@@ -11,9 +11,7 @@ export default function Banner() {
                     &apos;Nice try Spliddy&apos;
                 </div>
             </div>
-            <div>
 
-            </div>
         </div>
     )
 }

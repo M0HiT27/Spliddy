@@ -20,7 +20,7 @@ export const authOptions = {
                     password: { label: 'password', type: 'password', placeholder: '' },
                 },
                 async authorize(credentials, req) {
-                    console.log('sigin request aayi');
+                    console.log('sigin request aayi' + req);
                     const userData = {
                         email: credentials?.email,
                         password: credentials?.password,

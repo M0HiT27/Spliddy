@@ -72,7 +72,7 @@ function SignupCard() {
         }
     }
     return (
-        <div className=" flex flex-col justify-center gap-8  p-4 bg-white border-lightBlue border rounded-2xl shadow-2xl h-[50%] w-[80%] max-w-100">
+        <div className=" flex flex-col justify-center gap-8  p-4 bg-white border-lightBlue border rounded-2xl shadow-2xl h-[60%] w-[70%] max-w-80">
 
             <div className=" text-gray-500">
                 <input ref={nameRef} placeholder="Name" className="my-2 w-full p-2 border rounded-md  border-gray-400"></input>
@@ -91,9 +91,9 @@ function SignupCard() {
 export default function Signup() {
 
     return (
-        <div className="md:bg-lightBlue bg-ourPurple h-screen flex-grow flex flex-col">
+        <div className=" h-screen flex-grow flex flex-col">
 
-            <div className="md:hidden block p-2 text-4xl  text-white">
+            <div className="md:hidden block p-2 pl-4 text-4xl  text-white">
 
                 Spliddy
 
