@@ -11,10 +11,10 @@ const client = new PrismaClient();
             , { title: "ChoCHo", amount: 300.00, by: "Ayush", balance: [{ "Ayush": -100 }, { "Dawg": -100 }, { "Babla": -100 }] }
             , { title: "cho", amount: 300.00, by: "Ayush", balance: [{ "Ayush": -100 }, { "Dawg": -100 }, { "Babla": -100 }] }
 */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default async function Page({ params }: { params: any }) {
 
-    const id = (await params).id
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+
+    const { id } = (await params)
 
     try {
         // const session = await getServerSession();

@@ -135,11 +135,16 @@ export async function DELETE(req: NextRequest) {
             { status: 401 },
         )
     }
-    const data = await req.json();
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+        return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
     try {
         const spliddy = await client.spliddies.findFirst({
             where: {
-                id: data.id
+                id: id
             }
         })
         if (spliddy && spliddy.authorEmail == session.user?.email) {

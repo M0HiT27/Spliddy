@@ -16,7 +16,7 @@ export default function MessagePopup({ message, errorSetter, isError }: ErrorMes
             errorSetter("");
             makeInvisible();
         }, 5000);
-    })
+    }, [])
 
     if (isError) {
         return (

@@ -1,5 +1,6 @@
 "use client"
 import { useEffect, useRef, useState } from "react"
+import { useRouter } from 'next/navigation'
 import { DeleteIcon, TickIcon } from "./Icons";
 import MessagePopup from "./MessagePopup";
 import { roundToDecimal } from "@/lib/algo";
@@ -8,11 +9,13 @@ import axios, { AxiosError } from "axios";
 
 
 export default function SpliddyCreator({ props }: { props?: Spliddies }) {
+
     // const [names, setNames] = useState<string[]>([]);
+    const router = useRouter();
     const [errorState, setErrorState] = useState<string>("");
     const isErrorRef = useRef<boolean>(true);
     function errorMaker(errorMessage: string) {
-        console.log("errorMaker called with " + errorMessage);
+        // console.log("errorMaker called with " + errorMessage);
         isErrorRef.current = true;
         setErrorState(errorMessage);
     }
@@ -107,16 +110,40 @@ export default function SpliddyCreator({ props }: { props?: Spliddies }) {
             return;
         }
         console.log(id);
-        const response = await fetch("/api/generate", {
-            method: "POST",
-            body: JSON.stringify({ id: id })
+        if (!confirm("Do you want to generate the PDF?")) {
 
-        });
-        const pdfBlob = await response.blob();
-        const pdfUrl = URL.createObjectURL(pdfBlob);
+            router.push('/');
+        }
+
+        router.push('/');
+
+        const newTab = window.open("", "_blank");
+
+        try {
+            const response = await fetch("/api/generate", {
+                method: "POST",
+                body: JSON.stringify({ id: id })
+
+            });
+            const pdfBlob = await response.blob();
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+
+            if (pdfUrl && newTab) {
+                newTab.location.href = pdfUrl;
+            } else {
+                newTab?.close();
+                alert("Failed to generate PDF");
+            }
+        } catch (error) {
+            newTab?.close();
+            alert("An error occurred while generating the PDF.");
+            console.error("Error generating PDF:", error);
+        }
+
+
 
         // Open in a new tab
-        window.open(pdfUrl, "_blank");
+        // window.open(pdfUrl, "_blank");
 
     };
 
@@ -235,17 +262,7 @@ export default function SpliddyCreator({ props }: { props?: Spliddies }) {
             console.log(e);
         }
     }
-    useEffect(() => {
-        const copy = { ...balance };
-        expenses.map((expense) => {
-            copy[expense.by] += expense.amount;
-            expense.balance.map((b) => {
-                copy[b.name] += b.due;
-            })
-        })
-        console.log(copy);
-        setBalance(copy);
-    }, [expenses])
+
     function Overview() {
         return (
             <>
@@ -275,8 +292,8 @@ export default function SpliddyCreator({ props }: { props?: Spliddies }) {
                                             {name}
                                         </p>
                                     </div>
-                                    <div className="text-black font-medium">
-                                        <p>{amount < 0 ? "- " : ""}&#8377;{Math.abs(amount).toFixed(2)}</p>
+                                    <div className="text-black font-bold">
+                                        <p>{amount < 0 ? "-" : ""}&#8377;{Math.abs(amount).toFixed(2)}</p>
                                     </div>
                                 </div>
                             )
@@ -385,15 +402,26 @@ export default function SpliddyCreator({ props }: { props?: Spliddies }) {
                 throw ("Empty spliddy title");
             }
             if (expenses.length == 0) throw ("No expenses");
-            const response = await axios.post("/api/spliddy", {
+            let response;
+            if (!props) {
+                response = await axios.post("/api/spliddy", {
 
-                title: spliddyNameRef.current?.value,
-                spliddy: {
-                    members: Object.keys(balance).map((b) => b),
-                    expenses: expenses
-                }
+                    title: spliddyNameRef.current?.value,
+                    spliddy: {
+                        members: Object.keys(balance).map((b) => b),
+                        expenses: expenses
+                    }
 
-            });
+                });
+            } else {
+                response = await axios.put('/api/spliddy', {
+                    id: props.id,
+                    updateData: {
+                        members: Object.keys(balance).map((b) => b),
+                        expenses: expenses
+                    }
+                })
+            }
             if (response.status == 200) {
                 console.log(response.data);
                 successMaker("success");
@@ -415,18 +443,47 @@ export default function SpliddyCreator({ props }: { props?: Spliddies }) {
 
 
     }
+    async function deleteSpliddy() {
+        if (!props) return;
+        if (confirm("Do you want to delete this spliddy?")) {
+            const res = await axios.delete('/api/spliddy', {
+                params: { id: props.id }
+            })
+            if (res.status == 200) router.push('/');
+        } return;
+    }
+    useEffect(() => {
+        if (props) {
+            console.log(props.data.expenses)
+            setExpenses([...props.data.expenses]);
+
+        }
+    }, [])
+    useEffect(() => {
+        const copy = { ...balance };
+        expenses.forEach((expense) => {
+            copy[expense.by] = (copy[expense.by] ?? 0) + expense.amount;
+            expense.balance.forEach((b) => {
+                copy[b.name] = (copy[b.name] ?? 0) + b.due;
+            });
+        });
+        console.log(copy);
+        setBalance(copy);
+    }, [expenses])
     return (
         <div className="lg:h-[90%] h-full rounded-2xl  lg:w-[60%] w-full shadow shadow-gray-400 bg-lightBlue ">
             <div className=" h-[10%] w-full border-b border-gray-400 flex items-center justify-between ">
-                <div className="h-full w-full flex items-center">
+                <div className="h-full w-full flex items-center pl-4">
 
-                    <h2 className="font-mono font-extralight text-gray-900 text-xl pl-4  ">
+                    <h2 className={`font-mono ${props && "hidden"} text-gray-900 text-xl   `}>
                         Name :
                     </h2>
-                    <input ref={spliddyNameRef} disabled={(props) !== undefined} defaultValue={props?.title || spliddyNameRef?.current?.value} maxLength={15} placeholder="" className=" h-[80%] w-[40%] border border-gray-400 pl-2 font-mono font-extralight text-gray-500 rounded-xl">
+                    <input ref={spliddyNameRef} disabled={(props) !== undefined} defaultValue={props?.title || spliddyNameRef?.current?.value} maxLength={15} placeholder="" className={` h-[80%] w-[40%]  pl-2 font-mono ${props ? "font-bold text-black text-xl" : "font-extralight text-gray-500 border border-gray-400"}   rounded-xl`}>
                     </input>
                 </div>
-                {/* <button onClick={() => saveSpliddy()} className="hover:cursor-pointer text-white bg-ourPurple px-4 p-2 mr-4 rounded-md">Save</button> */}
+                <button onClick={() => deleteSpliddy()} className={`hover:cursor-pointer hover:bg-gray-500 text-red-950 px-4 p-2 mr-4 rounded-md ${props ? 'block' : 'hidden'}`}>
+                    <DeleteIcon size={"size-8"} />
+                </button>
             </div>
             <div className="h-[80%] flex flex-col w-full border-b border-gray-400 ">
                 <div className=" w-full flex  font-mono text-ourPurple bg-gray-400 ">

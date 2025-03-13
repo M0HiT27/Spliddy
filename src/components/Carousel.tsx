@@ -56,7 +56,7 @@ export default function Carousel() {
     useEffect(() => {
         const interval = setInterval(increaseInd, 5000);
         return () => clearInterval(interval);
-    })
+    }, [])
     return (
         <AnimatePresence mode="wait">
             <motion.div
