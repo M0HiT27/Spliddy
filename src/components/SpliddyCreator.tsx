@@ -460,7 +460,7 @@ export default function SpliddyCreator({ props }: { props?: Spliddies }) {
         }
     }, [])
     useEffect(() => {
-        const copy = { ...balance };
+        const copy: Record<string, number> = {};
         expenses.forEach((expense) => {
             copy[expense.by] = (copy[expense.by] ?? 0) + expense.amount;
             expense.balance.forEach((b) => {
