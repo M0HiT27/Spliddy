@@ -45,13 +45,17 @@ function SigninCard() {
                 password: parsedData.password,
                 redirect: false,
             });
+            console.log("something");
             if (res?.status == 200) {
                 successMaker("Successfully signed in");
-                setTimeout(() => { router.push('/dashboard') }, 1000);
+                setTimeout(() => { router.push('/home') }, 500);
 
+            } else {
+                errorMaker('Invalid credentials');
             }
 
         } catch (e) {
+            console.log("error flag");
             //catching zod errors
             if (e instanceof z.ZodError) {
                 const error = e.flatten().fieldErrors;
@@ -61,6 +65,8 @@ function SigninCard() {
                 else if (error.password) {
                     errorMaker(error.password[0])
                 }
+
+            } else {
 
             }
         }
@@ -74,8 +80,8 @@ function SigninCard() {
             </div>
 
             <div className="flex gap-2 flex-col items-end justify-center">
-                <button onClick={() => sendSigninReq()} className="border hover:bg-lightBlue border-gray-400 rounded-md p-2  w-full text-ourPurple">Signin</button>
-                <button onClick={() => { router.push('/signup') }} className=" hover:text-ourPurple text-md ">Register</button>
+                <button onClick={() => sendSigninReq()} className="border hover:cursor-pointer hover:bg-lightBlue border-gray-400 rounded-md p-2  w-full text-ourPurple">Signin</button>
+                <button onClick={() => { router.push('/signup') }} className="hover:cursor-pointer hover:text-ourPurple text-md ">Register</button>
             </div>
 
             {errorState && <MessagePopup message={errorState} errorSetter={setErrorState} isError={isErrorRef.current} />}

@@ -16,6 +16,8 @@
   --color-lightBlue : #dfe7ff;
  --color-errorColor : #ca2a30;
 }
+
+@plugin 'tailwind-scrollbar';
 /*
 #8882ee
 

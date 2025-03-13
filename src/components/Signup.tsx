@@ -46,7 +46,7 @@ function SignupCard() {
             })
             if (response.status == 200) {
                 successMaker('signup successful')
-                setTimeout(() => { router.push('/signin') }, 1500);
+                setTimeout(() => { router.push('/signin') }, 500);
             }
         } catch (e) {
             if (e instanceof z.ZodError) {
@@ -81,8 +81,9 @@ function SignupCard() {
                 <input type="password" ref={passwordRef} placeholder="Password" className="my-2 w-full p-2 border rounded-md border-gray-400"></input>
             </div>
             <div className="flex flex-col items-end justify-center">
-                <button onClick={() => sendSigninReq()} className="border hover:bg-lightBlue border-gray-400 rounded-md p-2  w-full text-ourPurple">Signup</button>
-                <button onClick={() => { router.push('/signin') }} className=" hover:text-ourPurple text-md ">Sign In</button>
+                <button onClick={() => sendSigninReq()} className="border hover:bg-lightBlue hover:cursor-pointer border-gray-400 rounded-md p-2  w-full text-ourPurple">Signup</button>
+
+                <button onClick={() => { router.push('/signin') }} className=" hover:text-ourPurple hover:cursor-pointer text-md ">Sign In</button>
             </div>
             {errorState && <MessagePopup message={errorState} errorSetter={setErrorState} isError={isErrorRef.current} />}
         </div>

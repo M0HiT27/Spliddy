@@ -33,11 +33,14 @@ export const authOptions = {
                                 email: parsedData.email
                             }
                         })
+
                         if (user) {
+
                             const passwordMatch = await bcrypt.compare(parsedData.password, user.password);
                             if (passwordMatch) {
                                 const jwtSecret = process.env.JWT_SECRET;
                                 const token = jwt.sign({ userID: user.id }, jwtSecret as string);
+
                                 return {
                                     name: user.name,
                                     id: user.id,
@@ -45,12 +48,15 @@ export const authOptions = {
                                     token: token
                                 }
                             }
-                        } return null;
+                        }
+
+                        return null
+
 
                     } catch (e) {
-                        console.log(e);
+                        console.log(e)
+                        return null;
                     }
-                    return null;
 
                 }
             }

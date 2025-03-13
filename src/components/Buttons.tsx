@@ -11,7 +11,13 @@ import { useRouter } from "next/navigation";
 //     )
 // }
 
-export function LogoutButton() {
+export function LogoutButton(
+    {
+        variant
+    }: {
+        variant: string | null
+    }
+) {
     const router = useRouter();
     async function logout() {
         await signOut();
@@ -22,7 +28,7 @@ export function LogoutButton() {
 
         // </button>
 
-        <button onClick={() => logout()} className="hover:cursor-pointer hover:scale-[1.2] flex items-center justify-evenly text-lg bg-lightBlue text-ourPurple">
+        <button onClick={() => logout()} className={`hover:cursor-pointer hover:scale-[1.2] flex items-center justify-evenly text-lg ${variant == 'home' ? "text-white" : "bg-transparent text-ourPurple"}`}>
             {/* <LogoutIconArrow /> */}
             <div className="ml-1  md:text-lg text-md">
                 Log Out

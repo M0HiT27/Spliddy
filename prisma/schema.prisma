@@ -15,24 +15,38 @@ datasource db {
 
 type Balance {
   friend String @db.ObjectId
-  due    Int    @default(0)
+  due    Float  @default(0)
 }
 
 model User {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String   @unique
+  password String
+  groups   String[] @default([]) // refers to the groups user is in
+  Balances String?  @db.ObjectId // refers to the UserBalance
+}
+
+model UserBalance {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  email       String    @unique
-  password    String
-  groups      String[]  @default([]) // refers to the groups user is in
-  settlements Balance[] // refers to the amount user owes or is owed along with the person in reference
+  owner       String    @db.ObjectId
+  settlements Balance[]
+  lastUpdated DateTime  @default(now())
+}
+
+model GroupBalance {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  group       String    @db.ObjectId
+  settlements Balance[]
+  lastUpdated DateTime  @default(now())
 }
 
 model Group {
-  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
   name            String
-  members         String[]  @db.ObjectId // refers to users in that group
-  groupSettlement Balance[]
-  expenses        String[]  @db.ObjectId // refers to expenses in that group
+  members         String[] @db.ObjectId // refers to users in that group
+  groupSettlement String?  @db.ObjectId // refers to the GroupBalance
+  expenses        String[] @db.ObjectId // refers to expenses in that group
 }
 
 model Expense {
@@ -50,4 +64,29 @@ model Settlement {
   payer     String   @db.ObjectId
   receiver  String   @db.ObjectId
   timestamp DateTime @default(now())
+}
+
+model Spliddies {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  author      String      @db.ObjectId
+  authorEmail String
+  title       String      @unique
+  data        spliddyData
+}
+
+type spliddyBalance {
+  name String
+  due  Float
+}
+
+type spliddyExpense {
+  title   String
+  amount  Float
+  by      String
+  balance spliddyBalance[]
+}
+
+type spliddyData {
+  members  String[]
+  expenses spliddyExpense[]
 }

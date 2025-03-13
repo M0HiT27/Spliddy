@@ -10,7 +10,7 @@ import Carousel from '@/components/Carousel';
 
 export default async function Home() {
   const session = await getServerSession();
-  if (session) redirect("/dashboard");
+  if (session) redirect("/home");
   return (
     <div className='h-lvh w-screen flex items-center'>
       <header className='fixed top-0 bg-lightBlue w-screen h-[8lvh] shadow p-2 px-6 flex justify-between items-center'>

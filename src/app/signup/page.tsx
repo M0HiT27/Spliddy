@@ -8,7 +8,7 @@ import { HomeButton } from '@/components/Buttons';
 
 export default async function SignupPage() {
     const session = await getServerSession();
-    if (session) redirect("/dashboard");
+    if (session) redirect("/home");
     return (
         <div className="flex">
             <header className='fixed top-0  w-screen h-[8lvh]  p-2 px-6 flex justify-end items-center'>
