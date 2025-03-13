@@ -114,9 +114,10 @@ export async function PUT(req: NextRequest) {
                 }
             })
             if (updation) {
-                return NextResponse.json({
-                    msg: "Spliddy Successfully updated.."
-                })
+                return NextResponse.json(
+                    spliddy.id,
+                    { status: 200 }
+                )
             }
 
         } throw "Spliddy not found"

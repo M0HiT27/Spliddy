@@ -110,35 +110,36 @@ export default function SpliddyCreator({ props }: { props?: Spliddies }) {
             return;
         }
         console.log(id);
-        if (!confirm("Do you want to generate the PDF?")) {
+        if (!confirm("Do you want to generate the spliddy?")) {
 
             router.push('/');
+            return;
         }
+        console.log(id);
+        router.push(`/spliddy-preview/${id}`);
 
-        router.push('/');
+        // const newTab = window.open("", "_blank");
 
-        const newTab = window.open("", "_blank");
+        // try {
+        //     const response = await fetch("/api/generate", {
+        //         method: "POST",
+        //         body: JSON.stringify({ id: id })
 
-        try {
-            const response = await fetch("/api/generate", {
-                method: "POST",
-                body: JSON.stringify({ id: id })
+        //     });
+        //     const pdfBlob = await response.blob();
+        //     const pdfUrl = URL.createObjectURL(pdfBlob);
 
-            });
-            const pdfBlob = await response.blob();
-            const pdfUrl = URL.createObjectURL(pdfBlob);
-
-            if (pdfUrl && newTab) {
-                newTab.location.href = pdfUrl;
-            } else {
-                newTab?.close();
-                alert("Failed to generate PDF");
-            }
-        } catch (error) {
-            newTab?.close();
-            alert("An error occurred while generating the PDF.");
-            console.error("Error generating PDF:", error);
-        }
+        //     if (pdfUrl && newTab) {
+        //         newTab.location.href = pdfUrl;
+        //     } else {
+        //         newTab?.close();
+        //         alert("Failed to generate PDF");
+        //     }
+        // } catch (error) {
+        //     newTab?.close();
+        //     alert("An error occurred while generating the PDF.");
+        //     console.error("Error generating PDF:", error);
+        // }
 
 
 

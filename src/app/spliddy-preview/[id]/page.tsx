@@ -2,7 +2,7 @@
 import minimisePayments from "@/lib/algo";
 import React from "react";
 import { PrismaClient } from "@prisma/client";
-// import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 const client = new PrismaClient();
 /*
@@ -15,10 +15,12 @@ const client = new PrismaClient();
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
 
     const { id } = (await params)
-
+    console.log(id);
     try {
-        // const session = await getServerSession();
-        // if (!session) throw "Not allowed pupp"
+        const session = await getServerSession();
+        if (!session) {
+            redirect('/');
+        }
 
         const spliddy = await client.spliddies.findFirst({
             where: {
@@ -27,7 +29,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         })
 
         if (spliddy) {
-            //if (spliddy.authorEmail != session.user?.email) throw "Not Allowed"
+            if (spliddy.authorEmail != session.user?.email) throw "Not Allowed"
             const dummyData = spliddy.data;
             const total = dummyData.expenses.reduce((acc, txn) => {
                 txn.balance.map((obj) => {
@@ -132,8 +134,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     } catch (e) {
         console.log(e);
         redirect("/")
-        return <div>
-        </div>
+
     }
 
 
